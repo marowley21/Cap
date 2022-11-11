@@ -1,51 +1,39 @@
-{% extends "base.html" %} {% block title %}Sign Up{% endblock %}
+{% extends "base.html.j2" %} {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<form method="POST">
-  <h3 align="center">Sign Up</h3>
+<h3 align="center">Sign Up</h3>
+<form method="POST"action="{{url_for('auth.signUp')}}">
+  {{ form.hidden_tag() }}
   <div class="form-group">
-    <label for="email">Email Address</label>
-    <input 
-      type="email" 
-      class="form-control" 
-      id="email" 
-      name="email" 
-      placeholder="Enter email"
-    />
+    {{ form.email.label(class="form-label") }}
+    {{ form.email(class="form-control") }}
+    {% for error in form.email.errors %}
+    <small style="color:red;">{{ error }}</small>
+{% endfor %}
+    
 </div>
 <div class="form-group">
-  <label for="Name">First Name</label>
-  <input 
-    type="text" 
-    class="form-control" 
-    id="Name" 
-    name="Name" 
-    placeholder="Enter name"
-  />
+  {{ form.first_name.label(class="form-label") }}
+    {{ form.first_name(class="form-control") }}
+    {% for error in form.first_name.errors %}
+    <small style="color:red;">{{ error }}</small>
+{% endfor %}
 </div>
 <div class="form-group">
-    <label for="password1">Password</label>
-    <input 
-      type="password" 
-      class="form-control" 
-      id="password1" 
-      name="password1" 
-      placeholder="Enter password"
-    />
+  {{ form.password.label(class="form-label") }}
+  {{ form.password(class="form-control") }}
+  {% for error in form.password.errors %}
+  <small style="color:red;">{{ error }}</small>
+{% endfor %}
   </div>
   <div class="form-group">
-    <label for="password2">Password (Confirm)</label>
-    <input 
-      type="password" 
-      class="form-control" 
-      id="password2" 
-      name="password2" 
-      placeholder="Confirm password"
-    />
+    {{ form.confirm_password.label(class="form-label") }}
+    {{ form.confirm_password(class="form-control") }}
+    {% for error in form.confirm_password.errors %}
+    <small style="color:red;">{{ error }}</small>
+  {% endfor %}
   </div>
   <br />
-  <button
-    type="submit"
-    class="btn btn-primary">Submit</button>    
+  {{ form.submit(class="btn btn-primary") }}   
 </form>
 {% endblock %}

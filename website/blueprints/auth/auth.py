@@ -3,7 +3,7 @@ from website.models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import bp as auth
 from flask_login import login_user, login_required, logout_user, current_user
-from .forms import LoginForm
+from .forms import LoginForm, RegisterForm
 
 
 
@@ -48,23 +48,32 @@ def logout():
 
 @auth.route('/sign-up',methods=['GET', 'POST'])
 def signUp():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        Name = request.form.get('Name')
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
-        if len(email) < 4:
-            flash('Email must be greater than 3 characters.', category='error') 
-        elif len(Name) < 2:
-            flash('Name must be greater than 1 character.', category='error')
-        elif password1 != password2:
-            flash('Passwords do not match.', category='error')
-        elif len(password1) < 7:
-            flash('Password must be greater than 6 characters.', category='error')
-        else:
-            flash('Account created!', category='success')
+    form = RegisterForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        new_user_data = {
+            "first_name" : form.first_name.data.title(),
+            "email": form.email.data.lower(),
+            "password" : form.password.data,
+            "confirm_password" : form.confirm_password.data
+            }
+        new_user_object = User()
+        new_user_object.from_dict(new_user_data)
+        new_user_object.save()
+        flash('Account created!', category='success')
+        return redirect(url_for("auth.login"))
             
 
-    return render_template("sign-up.html")
+    return render_template("sign-up.html", form=form)
 
+        
+        # if len(new_user_data["email"]) < 4:
+        #     flash('Email must be greater than 3 characters.', category='error') 
+        # elif len(new_user_data["first_name"]) < 2:
+        #     flash('Name must be greater than 1 character.', category='error')
+        # elif new_user_data["password"] != new_user_data["confirm_password"]:
+        #     flash('Passwords do not match.', category='error')
+        # elif len(new_user_data["password"]) < 7:
+        #     flash('Password must be greater than 6 characters.', category='error')
+        # else:
+       
     

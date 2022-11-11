@@ -17,6 +17,7 @@ if os.environ.get('FLASK_DEBUG'):
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.config['SECRET_KEY'] = 'ilmbjandtanda'
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
@@ -29,7 +30,7 @@ def create_app(config_class=Config):
     app.register_blueprint(auth_bp)
 
     @app.route('/')
-    def home():
+    def index():
         return render_template("home.html.j2")
 
 
